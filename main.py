@@ -61,7 +61,7 @@ def start_server():
 
         try:
             file_requested = file_requested[1]
-            print(file_requested)
+            #print(file_requested)
         except:
             connection.close()
             continue
@@ -71,7 +71,10 @@ def start_server():
         if os.path.isdir("./" + file_requested):
             response = list_directory(file_requested)
             if response == "index.html":
-                file_requested = file_requested + "/index.html"
+                if file_requested == "/":
+                    file_requested += "index.html"
+                else:
+                    file_requested += "/index.html"
                 server_response = read_file(file_requested)
                 connection.send(server_response)
             else:
@@ -87,8 +90,6 @@ def start_server():
                       "You've been returned to start directory"
                 response = list_directory("/", str)
                 connection.send(response.encode('utf-8'))
-                connection.close()
-                continue
 
         connection.close()
 
