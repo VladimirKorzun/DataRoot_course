@@ -45,10 +45,15 @@ def read_file(file_requested):
 
 
 def start_server():
-    host = sys.argv[1]
+    port = sys.argv[1]
     #print(host)
     serversocket = socket.socket()
-    serversocket.bind(('localhost', int(host)))
+    try:
+        serversocket.bind(('localhost', int(port)))
+        print("Starting server on port: " + port)
+    except:
+        print("Invalid port number. Try again.")
+        return -1
 
     while True:
         serversocket.listen(1)
@@ -86,8 +91,8 @@ def start_server():
                 server_response = read_file(file_requested)
                 connection.send(server_response)
             except:
-                str = "File not exist" \
-                      "You've been returned to start directory"
+                str = "File not exist. " \
+                      "You've been returned to start directory."
                 response = list_directory("/", str)
                 connection.send(response.encode('utf-8'))
 
@@ -95,4 +100,7 @@ def start_server():
 
 
 if __name__ == "__main__":
-    start_server()
+    if len(sys.argv) == 2:
+        start_server()
+    else:
+        print("Invalid number of arguments")
